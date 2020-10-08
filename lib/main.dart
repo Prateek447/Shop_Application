@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapplication/providers/cart.dart';
+import 'package:shopapplication/providers/orders.dart';
 import 'package:shopapplication/providers/products_provider.dart';
 import 'package:shopapplication/screens/cart_screen.dart';
 import 'package:shopapplication/screens/product_overview_screen.dart';
@@ -20,6 +21,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider.value(
           value: Cart(),
         ),
+        ChangeNotifierProvider.value(
+          value: Orders(),
+        ),
       ],
       child: MaterialApp(
           title: 'CapRion',
@@ -31,7 +35,7 @@ class MyApp extends StatelessWidget {
           home: ProductsOverviewScreen(),
           routes: {
             ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-            CartScreen.modalRoute:(ctx) => CartScreen(),
+            CartScreen.modalRoute: (ctx) => CartScreen(),
           }),
     );
   }
