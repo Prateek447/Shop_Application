@@ -20,18 +20,18 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
-  int get length{
+  int get length {
     return _items.length;
   }
 
   double get totalAmount {
-    var total=0.0;
+    var total = 0.0;
     _items.forEach((key, cartI) {
-      total += cartI.quantity*cartI.price;
+      total += cartI.quantity * cartI.price;
     });
     return total;
+  }
 
-}
   void addItem(String id, String title, int quantity, double price) {
     if (_items.containsKey(id)) {
       _items.update(
@@ -53,13 +53,32 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeItem(String proId){
+  void removeItem(String proId) {
     _items.remove(proId);
     notifyListeners();
   }
 
-  void clear(){
-    _items={};
+  void removeSingleItem(String proId) {
+    if (!_items.containsKey(proId)) return;
+
+    if(_items[proId].quantity>1) {
+      _items.update(
+          proId,
+              (existValue) =>
+              CartItem(
+                  id: existValue.id,
+                  title: existValue.title,
+                  price: existValue.price,
+                  quantity: existValue.quantity - 1));
+    }
+    else
+      _items.remove(proId);
+
+    notifyListeners();
+  }
+
+  void clear() {
+    _items = {};
     notifyListeners();
   }
 }
