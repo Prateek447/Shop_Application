@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopapplication/providers/cart.dart';
+import 'package:shopapplication/providers/products_provider.dart';
 import 'package:shopapplication/screens/cart_screen.dart';
 import 'package:shopapplication/widgets/badge.dart';
 import 'package:shopapplication/widgets/drawer.dart';
@@ -19,7 +20,33 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var favOnly = false;
+  var _isInit = true;
+  var _isLoading= false;
 
+  @override
+  void initState() {
+    //Provider.of<Products>(context).fetchAndGetProduct(); IT WON'T WORK IN THE INIT STATE
+//     Future.delayed(Duration.zero).then((_){
+//       Provider.of<Products>(context).fetchAndGetProduct();
+//     });                       IT CAN WORK BECAUSE IT EXECUTE AFTER EVERYTHING WIRED UP
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    if(_isInit) {
+      setState(() {
+        _isLoading=true;
+      });
+      Provider.of<Products>(context).fetchAndGetProduct().then((value){
+        setState(() {
+          _isLoading=false;
+        });
+      });
+    }
+    _isInit=false;
+    super.didChangeDependencies();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +87,7 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: ProductsGrid(favOnly),
+      body: _isLoading ? Center(child: CircularProgressIndicator()):ProductsGrid(favOnly),
     );
   }
 }
